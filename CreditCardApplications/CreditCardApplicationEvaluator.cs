@@ -12,9 +12,17 @@ namespace CreditCardApplications
 
         public const string EXPIRED = "EXPIRED";
 
+        public int ValidatorLookupCount { get; private set; }
+
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator validator)
         {
             _validator = validator ?? throw new System.ArgumentNullException(nameof(validator));
+            _validator.ValidatorLookupPerformed += ValidatorLookupPerformed;
+        }
+
+        private void ValidatorLookupPerformed(object sender, EventArgs e)
+        {
+            ValidatorLookupCount++;
         }
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)

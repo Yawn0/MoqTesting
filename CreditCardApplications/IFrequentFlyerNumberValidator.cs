@@ -19,5 +19,6 @@ namespace CreditCardApplications
         //string LicenseKey { get; }
         IServiceInformation ServiceInformation { get; }
         ValidatinMode ValidatinMode { get; set; }
+        event EventHandler ValidatorLookupPerformed;
     }
 }
