@@ -154,6 +154,8 @@ namespace CreditCardApplications.Tests
             mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), "FrequestFlyerNumber should be validated");
         }
 
+        // Behavior verification test
+
         [Fact]
         public void NotValidateFrequentFlyerNumberForHighIncomeApplications()
         {
@@ -168,7 +170,44 @@ namespace CreditCardApplications.Tests
 
             sut.Evaluate(application);
 
-            mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Never);
+            mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Never);  // verify if method has been called and how many times
+        }
+
+        [Fact]
+        public void CheckLicenseKeyForLowIncomeApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            mockValidator.Setup(x => x.ServiceInformation.LicenseData.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication()
+            {
+                GrossAnnualIncome = 99_000
+            };
+
+            sut.Evaluate(application);
+
+            mockValidator.VerifyGet(x => x.ServiceInformation.LicenseData.LicenseKey);  //Verify getter call
+        }
+
+
+        [Fact]
+        public void SetDetailedLookupForOlderApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            mockValidator.Setup(x => x.ServiceInformation.LicenseData.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication()
+            {
+                Age = 30
+            };
+
+            sut.Evaluate(application);
+
+            mockValidator.VerifySet(x => x.ValidatinMode = ValidatinMode.Detailed);  //Verify setter call
+            mockValidator.Verify(x => x.IsValid(null), Times.Once);
+            //mockValidator.VerifyNoOtherCalls(); // to verify which other methods and properties were accessed
         }
     }
 }
