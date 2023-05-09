@@ -247,7 +247,7 @@ namespace CreditCardApplications.Tests
 
             sut.Evaluate(application);
 
-            mockValidator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+            //mockValidator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
 
             Assert.Equal(1, sut.ValidatorLookupCount);
         }
@@ -297,6 +297,22 @@ namespace CreditCardApplications.Tests
 
             //Assert that IsValid was called three times with "aa", "bb", "cc"
             Assert.Equal(new List<string> { "aa", "bb", "cc" }, frequentFlyerNumberPassed);
+        }
+
+        [Fact]
+        public void ReferFraudRisk()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new();
+            Mock<FraudLookup> mockFraudLookup = new();
+            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object, mockFraudLookup.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHumanFraudRisk, decision);
         }
     }
 }
