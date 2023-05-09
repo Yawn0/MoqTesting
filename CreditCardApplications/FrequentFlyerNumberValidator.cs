@@ -20,6 +20,12 @@ namespace CreditCardApplications
 
         public IServiceInformation ServiceInformation => throw new NotImplementedException();
 
+        public ValidatinMode ValidatinMode 
+        { 
+            get => throw new NotImplementedException("For demo purposes"); 
+            set => throw new NotImplementedException("For demo purposes"); 
+        }
+
         public bool IsValid(string frequentFlyerNumber)
         {
             throw new NotImplementedException("Simulate this real dependency being hard to use");

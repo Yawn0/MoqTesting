@@ -18,5 +18,6 @@ namespace CreditCardApplications
         void IsValid(string frequentFlyerNumber, out bool isValid);
         //string LicenseKey { get; }
         IServiceInformation ServiceInformation { get; }
+        ValidatinMode ValidatinMode { get; set; }
     }
 }
