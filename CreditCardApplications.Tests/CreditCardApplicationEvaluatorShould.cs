@@ -1,4 +1,5 @@
 using Moq;
+using Moq.Protected;
 
 namespace CreditCardApplications.Tests
 {
@@ -304,7 +305,8 @@ namespace CreditCardApplications.Tests
         {
             Mock<IFrequentFlyerNumberValidator> mockValidator = new();
             Mock<FraudLookup> mockFraudLookup = new();
-            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+            //mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+            mockFraudLookup.Protected().Setup<bool>("CheckApplication", ItExpr.IsAny<CreditCardApplication>()).Returns(true);
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object, mockFraudLookup.Object);
 
