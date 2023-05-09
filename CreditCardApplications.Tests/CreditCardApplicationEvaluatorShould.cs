@@ -19,7 +19,10 @@ namespace CreditCardApplications.Tests
         [Fact]
         public void ReferYoungApplications()
         {
-            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>
+            {
+                DefaultValue = DefaultValue.Mock
+            };
             mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object); //system under test
@@ -41,6 +44,8 @@ namespace CreditCardApplications.Tests
             //mockValidator.Setup(x => x.IsValid(It.IsInRange("a", "z", Moq.Range.Exclusive))).Returns(true);
             mockValidator.Setup(x => x.IsValid(It.IsIn("z", "b", "x"))).Returns(true);
 
+            mockValidator.Setup(x => x.ServiceInformation.LicenseData.LicenseKey).Returns("OK");
+
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object); //system under test
             var application = new CreditCardApplication
             {
@@ -60,6 +65,7 @@ namespace CreditCardApplications.Tests
             //var mockValidator = new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);   // "strict" checks if properties and methods of the interface have been setup
             var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
             mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockValidator.Setup(x => x.ServiceInformation.LicenseData.LicenseKey).Returns("OK");
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object); //system under test
             var application = new CreditCardApplication();
